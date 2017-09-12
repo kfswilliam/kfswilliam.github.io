@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Handlee');
+body {
+font-family:'Handlee', cursive;	
+}
+h1{
+font-size: 70px;
+
+}
+.ninja{
+     width: 900px;
+     border-radius: 50px;
+     border-color: blue;
+     border-width: 10px;
+     border-style: solid;
+
+}
