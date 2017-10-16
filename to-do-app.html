@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To-Do-App</title>
+	<style type="text/css">
+	input[type="button"]{
+background-color:pink;
+	}
+
+	</style>
+	<script type="text/javascript">
+		function addItem(){
+           var newItem = document.createElement ("li");
+newItem.innerHTML = document.getElementById("box").value;
+newItem.onclick = removeItem;
+document.getElementById("list").appendChild(newItem);
+saveList();
+		}
+		function removeItem(){
+            document.getElementById("list").removeChild(this);
+            saveList();
+		}
+		function saveList(){
+           localStorage.storedList= document.getElementById("list").innerHTML;
+		}
+		function loadList(){
+			document.getElementById("list").innerHTML= localStorage.storedList;
+            for(var i=0; i < list.children.length; i++){
+            	list.children[i].onclick = removeItem;
+            }
+
+		}
+	</script>
+</head>
+<body>
+<p> Things we need to take:</p> <br/>
+<input type="text" id="box" value="Type here to add..">
+<input type="button" value="Add item" onclick="addItem()"/> <br/>
+<ol id="list"></ol>
+<script type="text/javascript">
+	if(localStorage.storedList){
+loadList();
+
+	}
+</script>
+</body>
+</html>
+
