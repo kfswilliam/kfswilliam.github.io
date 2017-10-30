@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Pong</title>
+</head>
+<body>
+<p>This is my Pong game. Totally by william chung ( former anchovy ).<p>
+<br/>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+      var canvas;
+      var canvasContext;
+      	
+
+    window.onload = function(){
+    canvas = document.getElementById('gameCanvas');
+    canvasContext = canvas.getContext ("2d");
+    
+canvasContext.fillStyle = 'hotpink';
+canvasContext.fillRect(0,0,canvas.width,canvas.height);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(20,20,200,50);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(20,20,50,500);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(20,500,200,50);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(300,20,200,50);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(300,20,50,530);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(450,20,50,530);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(300,200,200,50);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(550,20,200,50);
+canvasContext.fillStyle = 'pink';
+canvasContext.fillRect(630,20,50,530);
+    }
+
+</script>
+</body>
+</html>
