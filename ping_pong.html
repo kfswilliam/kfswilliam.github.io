@@ -87,7 +87,9 @@ colorCircle(ballx,bally,10,itemcolor);
 //paddleplayer
 colorRect(0,Paddle1Y,paddle_width,PADDLE_HEIGHT,itemcolor);
 //computer
-colorRect(canvas.width - paddle_width,paddle2y     ,paddle_width,PADDLE_HEIGHT,itemcolor);
+colorRect(canvas.width - paddle_width,paddle2y,paddle_width,PADDLE_HEIGHT,itemcolor);
+
+drawnet ();
 
 }
 
@@ -172,7 +174,7 @@ function handlemouseclick(evt){
 	}
 }
 function drawnet(){
-	for(var i = 0; 1< canvas.height; i += 40){
+	for(var i = 0; i< canvas.height; i += 40){
 		colorRect(canvas.width/2-1,i,2,20,netcolor)
 	}
 
