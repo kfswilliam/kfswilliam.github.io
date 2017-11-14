@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<p>This is my brickbreak game. Totally by william chung ( former anchovy ).<p>
+<br/>
+<canvas id="gameCanvas" width="800" height="600"></canvas>
+<script>
+var canvas;
+var canvasContext;
+var bgColor = 'blue';
+var itemColor = 'hotpink';
+
+var ballX = 100;
+var ballSpeedX = 5;
+var ballY=100;
+var ballSpeedY=10;
+
+
+const PADDLE_WIDTH = 100;
+const PADDLE_THICKNESS = 10;
+var paddleX = 400;
+const PADDLE_DIST_FROM_EDGE = 10;
+
+const BRICK_W = 100;
+const BRICK_H = 50;
+const BRICK_COLS = 8;
+const BRICK_GAP = 2;
+const BRICK_ROWS = 3;
+//var brick0 = false;
+//var brick1 = false;
+//var brick2 = false;
+//var brick3 = false;
+var brickGrid = new Array (BRICK_COLS *BRICK_ROWS);
+
+
+
+
+//mouse debug tool show coordinates
+var mouseX;
+var mouseY;
+//var mouseBrickX;
+//var mouseBrickY;
+
+var gameLives = 3;
+var falseCount;
+
+
+window.onload = function(){
+	canvas= document.getElementById('gameCanvas');
+	canvasContext = canvas.getContext('2d');
+
+     brickReset();
+    
+
+	var framesPerSecond = 30;
+	setInterval(updateALL,1000/framesPerSecond);
+	canvas.addEventListener('mousemove',updateMousePos);
+
+falseCount = 0;
+
+}
+
+
+     
+    function drawEverything(){
+     if ( gameLives <= 0){
+     	gameOver();
+     	return;
+     }
+     if (falseCount>= BRICK_COLS*BRICK_ROWS){
+     	winScreen();
+     	return;
+     }
+	
+
+    	//backround color
+colorRect(0,0,canvas.width,canvas.height,bgColor);
+  //ball
+colorCircle(ballX,ballY,10,itemColor);
+//paddle
+colorRect(paddleX,canvas.height - PADDLE_DIST_FROM_EDGE,PADDLE_WIDTH,PADDLE_THICKNESS,itemColor);
+//debug  mouse coordinates
+
+ drawBricks();
+//colorText(mouseRow + "," + mouseCol + ":" + brickIndexUnderMouse,mouseX + 20,mouseY + 20,'red');//bricks
+colorText("Game Lives" + gameLives,10,canvas.height - 25,"white");
+
+    }
+    
+	function updateALL(){
+		drawEverything();
+		moveEverything();
+	} 
+	
+	function moveEverything()
+	{
+		 if ( gameLives <= 0){
+     	gameOver();
+     	return;
+     }
+     if (falseCount>= BRICK_COLS*BRICK_ROWS){
+     	winScreen();
+     	return;
+     }
+	
+		ballX+=ballSpeedX;
+		ballY+=ballSpeedY;
+
+if (ballX < 0){//left
+			ballSpeedX *= -1;
+		}
+		if (ballX > canvas.width){//right
+			ballSpeedX *= -1;
+		}
+		if (ballY < 0){//top
+			ballSpeedY *= -1;
+		}
+		if (ballY > canvas.height){//bottom
+			ballReset();
+			gameLives -= 1;
+
+			//ballSpeedY *= -1;
+
+		}
+
+paddleBounceControl();
+
+
+		
+}
+
+	function colorRect(topleftX,topleftY,boxWidth,boxHeight,fillColor){
+canvasContext.fillStyle = fillColor;
+  canvasContext.fillRect(topleftX,topleftY,boxWidth,boxHeight);
+}
+function colorCircle(centerx,centery,radius,fillcolor){
+	canvasContext.fillStyle = itemColor;
+  canvasContext.beginPath();
+canvasContext.arc(centerx,centery,radius,0,Math.PI*2,true);
+canvasContext.fill();
+
+}
+function updateMousePos(evt)
+{
+var rect = canvas.getBoundingClientRect();
+var root = document.documentElement;
+
+mouseX = evt.clientX - rect.left - root.scrollLeft;
+mouseY = evt.clientY - rect.top - root.scrolltop;
+
+paddleX = mouseX - PADDLE_WIDTH/2;
+}
+
+
+function ballReset()
+{
+ballX = canvas.width/2;
+ballY = canvas.height/2;
+}
+
+
+function paddleBounceControl(){
+	
+	var paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
+	var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
+	var paddleLeftEdgeX = paddleX;
+	var paddleRightEdgeX = paddleLeftEdgeX + PADDLE_WIDTH;
+
+if (ballY > paddleTopEdgeY && //BELOW TOP EDGE
+	//ballY < paddleBottomEdgeY && // ABOVE BOTTOM EDGE
+	ballX > paddleLeftEdgeX && // RIGHT OF LEFT EDGE
+	ballX < paddleRightEdgeX) //LEFT OF RIGHT EDGE
+	{ 
+	console.log("why!!!")
+	ballSpeedY *= -1;
+	var centerOfPaddle = paddleX + PADDLE_WIDTH/2;
+var ballDistFromPaddleCenterX = ballX - centerOfPaddle;
+ballSpeedX = ballDistFromPaddleCenterX * 0.35;
+}
+ var ballBrickCol = Math.floor (ballX/BRICK_W);
+ var ballBrickRow = Math.floor (ballY/BRICK_H);
+
+ var brickIndexUnderBall = rowColumnToArrayIndex(ballBrickCol,ballBrickRow);
+
+//removes bricks
+ if(brickIndexUnderBall >=0 && brickIndexUnderBall< BRICK_COLS * BRICK_ROWS)
+	{
+		if(brickGrid[brickIndexUnderBall])
+		{
+		falseCount += 1;
+	    ballSpeedY *= -1;
+	    brickGrid[brickIndexUnderBall] =false;
+	   }
+	}
+}
+function colorText(showWords,textX,textY,fillColor)
+{
+canvasContext.fillStyle = fillColor;
+canvasContext.fillText (showWords,textX,textY);
+}
+function drawBricks()
+{
+/*
+    brickGrid[0] = false;//makes it not work
+
+	if (brickGrid[0]){
+	colorRect(0,0,BRICK_W,BRICK_H,"red");
+    }
+    if (brickGrid[1]){
+    colorRect(BRICK_W,0,BRICK_W-2,BRICK_H,"pink");
+    }
+    if (brickGrid[2]){
+    colorRect(BRICK_W * 2,0,BRICK_W-2,BRICK_H,"red");
+    }
+    if (brickGrid[3]){
+    colorRect(BRICK_W * 3,0,BRICK_W-2,BRICK_H,"pink");
+    }
+    */
+   for (var eachRow = 0; eachRow < BRICK_ROWS; eachRow++) 
+   {
+
+    for (var eachCol=0;eachCol<BRICK_COLS;eachCol++)
+    {
+
+    	var arrayIndex = rowColumnToArrayIndex(eachCol,eachRow);
+
+    	if (brickGrid[arrayIndex])
+    	{
+
+	colorRect(BRICK_W * eachCol,BRICK_H * eachRow,BRICK_W-
+		BRICK_GAP,BRICK_H-BRICK_GAP,"red");
+			}
+		}
+	}
+}
+function brickReset()
+{
+	for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) 
+	{
+		brickGrid[i]=true;
+		
+	}
+
+}
+function rowColumnToArrayIndex(col,row)
+{
+	return BRICK_COLS * row + col;
+}
+
+function gameOver(){
+colorText("Game Over",350,200,"red");
+colorText("refresh to restart",350,230,"red");
+}
+function winScreen(){
+colorText("You win",350,200,"red");
+colorText("refresh to restart",350,230,"red");
+}
+</script>
+<ul>
+    <li><a href="menu_planet.html"> home </a></li>
+<ul>
+</body>
+</html>
+
+
+
