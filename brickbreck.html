@@ -186,7 +186,7 @@ ballSpeedX = ballDistFromPaddleCenterX * 0.35;
  var brickIndexUnderBall = rowColumnToArrayIndex(ballBrickCol,ballBrickRow);
 
 //removes bricks
- if(brickIndexUnderBall >=0 && brickIndexUnderBall< BRICK_COLS * BRICK_ROWS)
+ if(ballBrickCol>=0 && ballBrickCol<BRICK_COLS && ballBrickCol>=0 && ballBrickRow<BRICK_ROWS)
 	{
 		if(brickGrid[brickIndexUnderBall])
 		{
